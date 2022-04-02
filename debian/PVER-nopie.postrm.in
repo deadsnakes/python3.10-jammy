@@ -1,0 +1,13 @@
+#! /bin/sh
+
+set -e
+
+if [ "$1" = "remove" ]; then
+    dpkg-divert --package @PVER@-nopie \
+	--remove --rename \
+	--divert /usr/bin/@PVER@-pie /usr/bin/@PVER@
+fi
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,13 @@
+libpython@VER@d.so.1.0 libpython@VER@-dbg #MINVER#
+#include "libpython.symbols"
+ _PyObject_DebugMallocStats@Base @SVER@
+ _PySet_Dummy@Base @SVER@
+ _PyUnicode_CheckConsistency@Base @SVER@
+ _PyWideStringList_CheckConsistency@Base @SVER@
+ _Py_Dealloc@Base @SVER@
+ _Py_GetRefTotal@Base @SVER@
+ _Py_HashSecret_Initialized@Base @SVER@
+ _Py_NegativeRefcount@Base @SVER@
+ _Py_RefTotal@Base @SVER@
+ PyModule_Create2@Base @SVER@
+ PyModule_FromDefAndSpec2@Base @SVER@

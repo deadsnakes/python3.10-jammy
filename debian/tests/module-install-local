@@ -1,0 +1,78 @@
+#!/bin/sh
+
+cp -a debian/tests/packages "$AUTOPKGTEST_TMP"
+dist_packages=/usr/local/lib/python3.10/dist-packages
+
+setUp() {
+	mount -t tmpfs tmpfs $dist_packages
+}
+
+tearDown() {
+	umount $dist_packages
+}
+
+testFibPy() {
+	cd "$AUTOPKGTEST_TMP/packages/fibpy"
+	python3.10 setup.py install
+	assertTrue 'Install fibpy in /usr/local' $?
+	assertTrue 'fibpy was installed to /usr/local' "[ -e $dist_packages/fibpy-*.egg ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute fibpy from /usr/local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibC() {
+	cd "$AUTOPKGTEST_TMP/packages/fibc"
+	python3.10 setup.py install
+	assertTrue 'Install fibc in /usr/local' $?
+	assertTrue 'fibc was installed to /usr/local' "[ -e $dist_packages/fibc-*.egg ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$(python3.10 -c 'from fibc import fib; print(fib(5))')
+	assertTrue 'Execute fibc from /usr/local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyDevelop() {
+	cd "$AUTOPKGTEST_TMP/packages/fibpy"
+	python3.10 setup.py develop
+	assertTrue 'Install editable fibpy in /usr/local' $?
+	assertTrue 'fibpy was linked to /usr/local' "[ -e $dist_packages/fibpy.egg-link ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute editable fibpy from /usr/local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyPip() {
+	cd "$AUTOPKGTEST_TMP"
+	python3.10 -m pip install --no-build-isolation -v "$AUTOPKGTEST_TMP/packages/fibpy"
+	assertTrue 'Install fibpy via pip in /usr/local' $?
+	assertTrue 'fibpy was installed to /usr/local' "[ -e $dist_packages/fibpy.py ]"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute fibpy from /usr/local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyPipEditable() {
+	cd "$AUTOPKGTEST_TMP"
+	python3.10 -m pip install --no-build-isolation -v -e "$AUTOPKGTEST_TMP/packages/fibpy"
+	assertTrue 'Install editable fibpy via pip in /usr/local' $?
+	assertTrue 'fibpy was linked to /usr/local' "[ -e $dist_packages/fibpy.egg-link ]"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute fibpy from /usr/local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyDistutilsLocal() {
+	cd "$AUTOPKGTEST_TMP/packages/fibpy"
+	SETUPTOOLS_USE_DISTUTILS=local python3.10 setup.py install
+	assertTrue 'Install fibpy in /usr/local' $?
+	assertTrue 'fibpy was installed to /usr/local' "[ -e $dist_packages/fibpy-*.egg ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute fibpy from /usr/local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+. shunit2

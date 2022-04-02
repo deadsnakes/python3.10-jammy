@@ -1,0 +1,26 @@
+Description: Debian: Suggest installation of python3-gdbm package
+ We split gdbm out into a separate binary package. Help users who try to import
+ it, without it installed.
+
+Forwarded: not-needed
+
+--- a/Lib/dbm/gnu.py
++++ b/Lib/dbm/gnu.py
+@@ -1,3 +1,6 @@
+ """Provide the _gdbm module as a dbm submodule."""
+ 
+-from _gdbm import *
++try:
++    from _gdbm import *
++except ImportError as msg:
++    raise ImportError(str(msg) + ', please install the python3-gdbm package')
+--- a/Lib/dbm/ndbm.py
++++ b/Lib/dbm/ndbm.py
+@@ -1,3 +1,6 @@
+ """Provide the _dbm module as a dbm submodule."""
+ 
+-from _dbm import *
++try:
++    from _dbm import *
++except ImportError as msg:
++    raise ImportError(str(msg) + ', please install the python3-gdbm package')

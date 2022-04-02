@@ -1,0 +1,86 @@
+#!/bin/sh
+
+cp -a debian/tests/packages "$AUTOPKGTEST_TMP"
+HOME="$AUTOPKGTEST_TMP/home"
+mkdir -p "$HOME"
+virtualenv -p python3.10 "$AUTOPKGTEST_TMP/ve"
+
+site_packages="$AUTOPKGTEST_TMP/ve/lib/python3.10/site-packages"
+VP="$AUTOPKGTEST_TMP/ve/bin/python"
+
+tearDown() {
+	# Remove any fibpy/fibc installed in the venv
+	$VP -m pip uninstall --yes fibpy fibc
+	rm -f $site_packages/fibpy.egg-link
+}
+
+testVirtualenvLayout() {
+	assertTrue 'pip command installed' "[ -f $AUTOPKGTEST_TMP/ve/bin/pip ]"
+	assertTrue 'pip library installed' "[ -d $site_packages/pip ]"
+}
+
+testFibPy() {
+	cd "$AUTOPKGTEST_TMP/packages/fibpy"
+	$VP setup.py install
+	assertTrue 'Install fibpy in a virtualenv' $?
+	assertTrue 'fibpy was installed to virtualenv' "[ -e $site_packages/fibpy-*.egg ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$($VP -m fibpy 5)
+	assertTrue 'Execute fibpy from a virtualenv' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibC() {
+	cd "$AUTOPKGTEST_TMP/packages/fibc"
+	$VP setup.py install
+	assertTrue 'Install fibc in a virtualenv' $?
+	assertTrue 'fibc was installed to virtualenv' "[ -e $site_packages/fibc-*.egg ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$($VP -c 'from fibc import fib; print(fib(5))')
+	assertTrue 'Execute fibc from a virtualenv' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyDevelop() {
+	cd "$AUTOPKGTEST_TMP/packages/fibpy"
+	$VP setup.py develop
+	assertTrue 'Install editable fibpy in a virtualenv' $?
+	assertTrue 'fibpy was linked to virtualenv' "[ -e $site_packages/fibpy.egg-link ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$($VP -m fibpy 5)
+	assertTrue 'Execute editable fibpy from a virtualenv' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyPip() {
+	cd "$AUTOPKGTEST_TMP"
+	$VP -m pip install --no-build-isolation -v "$AUTOPKGTEST_TMP/packages/fibpy"
+	assertTrue 'Install fibpy via pip in a virtualenv' $?
+	assertTrue 'fibpy was installed to virtualenv' "[ -e $site_packages/fibpy.py ]"
+	stdout=$($VP -m fibpy 5)
+	assertTrue 'Execute fibpy from virtualenv' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyPipEditable() {
+	cd "$AUTOPKGTEST_TMP"
+	$VP -m pip install --no-build-isolation -v -e "$AUTOPKGTEST_TMP/packages/fibpy"
+	assertTrue 'Install editable fibpy via pip in a virtualenv' $?
+	assertTrue 'fibpy was linked to virtualenv' "[ -e $site_packages/fibpy.egg-link ]"
+	stdout=$($VP -m fibpy 5)
+	assertTrue 'Execute fibpy from virtualenv' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyDistutilsLocal() {
+	cd "$AUTOPKGTEST_TMP/packages/fibpy"
+	SETUPTOOLS_USE_DISTUTILS=local $VP setup.py install
+	assertTrue 'Install fibpy in a virtualenv' $?
+	assertTrue 'fibpy was installed to virtualenv' "[ -e $site_packages/fibpy-*.egg ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$($VP -m fibpy 5)
+	assertTrue 'Execute fibpy from a virtualenv' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+. shunit2

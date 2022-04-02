@@ -1,0 +1,80 @@
+#!/bin/sh
+
+cp -a debian/tests/packages "$AUTOPKGTEST_TMP"
+
+HOME="$AUTOPKGTEST_TMP/home"
+mkdir "$HOME"
+site_packages="$HOME/.local/lib/python3.10/site-packages"
+
+tearDown() {
+	# Remove the --user install directory
+	rm -rf $site_packages
+}
+
+testFibPy() {
+	cd "$AUTOPKGTEST_TMP/packages/fibpy"
+	python3.10 setup.py install --user
+	assertTrue 'Install fibpy in --user' $?
+	assertTrue 'fibpy was installed to ~/.local' "[ -e $site_packages/fibpy-*.egg ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute fibpy from ~/.local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibC() {
+	cd "$AUTOPKGTEST_TMP/packages/fibc"
+	python3.10 setup.py install --user
+	assertTrue 'Install fibc in --user' $?
+	assertTrue 'fibc was installed to ~/.local' "[ -e $site_packages/fibc-*.egg ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$(python3.10 -c 'from fibc import fib; print(fib(5))')
+	assertTrue 'Execute fibc from ~/.local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyDevelop() {
+	cd "$AUTOPKGTEST_TMP/packages/fibpy"
+	python3.10 setup.py develop --user
+	assertTrue 'Install editable fibpy in --user' $?
+	assertTrue 'fibpy was linked to ~/.local' "[ -e $site_packages/fibpy.egg-link ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute editable fibpy from ~/.local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyPip() {
+	cd "$AUTOPKGTEST_TMP"
+	python3.10 -m pip install --no-build-isolation --user -v \
+		"$AUTOPKGTEST_TMP/packages/fibpy"
+	assertTrue 'Install fibpy via pip in --user' $?
+	assertTrue 'fibpy was installed to ~/.local' "[ -e $site_packages/fibpy.py ]"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute fibpy from ~/.local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyPipEditable() {
+	cd "$AUTOPKGTEST_TMP"
+	python3.10 -m pip install --no-build-isolation --user -v -e \
+		"$AUTOPKGTEST_TMP/packages/fibpy"
+	assertTrue 'Install editable fibpy via pip in --user' $?
+	assertTrue 'fibpy was linked to ~/.local' "[ -e $site_packages/fibpy.egg-link ]"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute fibpy from ~/.local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+testFibPyDistutilsLocal() {
+	cd "$AUTOPKGTEST_TMP/packages/fibpy"
+	SETUPTOOLS_USE_DISTUTILS=local python3.10 setup.py install --user
+	assertTrue 'Install fibpy in --user' $?
+	assertTrue 'fibpy was installed to ~/.local' "[ -e $site_packages/fibpy-*.egg ]"
+	cd "$AUTOPKGTEST_TMP"
+	stdout=$(python3.10 -m fibpy 5)
+	assertTrue 'Execute fibpy from ~/.local' $?
+	assertEquals 'Correct result' 8 "$stdout"
+}
+
+. shunit2

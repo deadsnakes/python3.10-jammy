@@ -1,0 +1,90 @@
+Description: Disable ensurepip for the system installation
+ We have a python3-pip package, for users who want pip.
+ We just need ensurepip to seed pip in virtual environments.
+
+Forwarded: not-needed
+
+--- a/Lib/ensurepip/__init__.py
++++ b/Lib/ensurepip/__init__.py
+@@ -8,6 +8,34 @@
+ from importlib import resources
+ 
+ 
++def _ensurepip_is_disabled_in_debian_for_system():
++    # Detect if ensurepip is being executed inside of a python-virtualenv
++    # environment and return early if so.
++    if hasattr(sys, 'real_prefix'):
++        return
++
++    # Detect if ensurepip is being executed inside of a stdlib venv
++    # environment and return early if so.
++    if sys.prefix != getattr(sys, "base_prefix", sys.prefix):
++        return
++
++    # If we've gotten here, then we are running inside of the system Python
++    # and we don't want to use ensurepip to install into the system Python
++    # so instead we'll redirect the user to using dpkg and apt-get.
++    print('''\
++ensurepip is disabled in Debian/Ubuntu for the system python.
++
++Python modules for the system python are usually handled by dpkg and apt-get.
++
++    apt install python3-<module name>
++
++Install the python3-pip package to use pip itself.  Using pip together
++with the system python might have unexpected results for any system installed
++module, so use it on your own risk, or make sure to only use it in virtual
++environments.
++''')
++    sys.exit(1)
++
+ 
+ __all__ = ["version", "bootstrap"]
+ _PACKAGE_NAMES = ('setuptools', 'pip')
+@@ -137,6 +165,11 @@
+ 
+     Note that calling this function will alter both sys.path and os.environ.
+     """
++
++    # Ensure that we are only running this inside of a virtual environment
++    # of some kind.
++    _ensurepip_is_disabled_in_debian_for_system()
++
+     if altinstall and default_pip:
+         raise ValueError("Cannot use altinstall and default_pip together")
+ 
+--- a/Lib/venv/__init__.py
++++ b/Lib/venv/__init__.py
+@@ -309,7 +309,31 @@
+         # intended for the global Python environment
+         cmd = [context.env_exec_cmd, '-Im', 'ensurepip', '--upgrade',
+                                                          '--default-pip']
+-        subprocess.check_output(cmd, stderr=subprocess.STDOUT)
++        # Debian 2015-09-18 barry@debian.org: <python>-venv is a separate
++        # binary package which might not be installed.  In that case, the
++        # following command will produce an unhelpful error.  Let's make it
++        # more user friendly.
++        try:
++            subprocess.check_output(
++                cmd, stderr=subprocess.STDOUT,
++                universal_newlines=True)
++        except subprocess.CalledProcessError:
++            stdlib = sysconfig.get_path('stdlib')
++            if not os.path.exists(f'{stdlib}/ensurepip/__main__.py'):
++                print("""\
++The virtual environment was not created successfully because ensurepip is not
++available.  On Debian/Ubuntu systems, you need to install the python3-venv
++package using the following command.
++
++    apt install python{}-venv
++
++You may need to use sudo with that command.  After installing the python3-venv
++package, recreate your virtual environment.
++
++Failing command: {}
++""".format(sysconfig.get_python_version(), cmd))
++                sys.exit(1)
++            raise
+ 
+     def setup_scripts(self, context):
+         """

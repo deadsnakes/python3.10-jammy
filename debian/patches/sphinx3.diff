@@ -1,0 +1,30 @@
+Description: Allow building with Sphinx >= 3.2
+ Additionally: Disable sphinx warnings
+
+Bug-cython: https://bugs.python.org/issue40204
+Origin: upstream, https://github.com/python/cpython/commit/423e77d6de497931585d1883805a9e3fa4096b0b
+
+--- a/Doc/conf.py
++++ b/Doc/conf.py
+@@ -61,6 +61,10 @@ smartquotes_excludes = {
+ # Avoid a warning with Sphinx >= 2.0
+ master_doc = 'contents'
+ 
++# Allow to build with Sphinx >= 3.2
++c_allow_pre_v3 = True
++c_warn_on_allowed_pre_v3 = False
++
+ # Options for HTML output
+ # -----------------------
+ 
+--- a/Doc/Makefile
++++ b/Doc/Makefile
+@@ -11,7 +11,7 @@ BLURB        = PATH=$(VENVDIR)/bin:$$PAT
+ PAPER        =
+ SOURCES      =
+ DISTVERSION  = $(shell $(PYTHON) tools/extensions/patchlevel.py)
+-SPHINXERRORHANDLING = -W
++#SPHINXERRORHANDLING = -W
+ 
+ # Internal variables.
+ PAPEROPT_a4     = -D latex_elements.papersize=a4paper

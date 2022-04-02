@@ -1,0 +1,24 @@
+Description: Debian: Degrade argparse gracefully without shutil
+ python3.X-minimal includes argparse but not shutil. Use a fixed terminal
+ width, if shutil can't be imported.
+
+Forwarded: not-needed
+
+--- a/Lib/argparse.py
++++ b/Lib/argparse.py
+@@ -175,9 +175,12 @@ class HelpFormatter(object):
+ 
+         # default setting for width
+         if width is None:
+-            import shutil
+-            width = shutil.get_terminal_size().columns
+-            width -= 2
++            try:
++                import shutil as _shutil
++                width = _shutil.get_terminal_size().columns
++                width -= 2
++            except ImportError:
++                width = 70
+ 
+         self._prog = prog
+         self._indent_increment = indent_increment
