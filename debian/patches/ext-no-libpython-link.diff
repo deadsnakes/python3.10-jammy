@@ -1,8 +1,15 @@
-Description: Don't link extensions with the shared libpython library
- FIXME: Still needed since 3.8?
+From: Matthias Klose <doko@debian.org>
+Date: Tue, 12 Apr 2022 18:22:51 -0400
+Subject: Don't link extensions with the shared libpython library
 
+FIXME: Still needed since 3.8?
 Bug-cpython: https://bugs.python.org/issue21536
+---
+ Lib/distutils/command/build_ext.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/Lib/distutils/command/build_ext.py b/Lib/distutils/command/build_ext.py
+index 1a9bd12..654463e 100644
 --- a/Lib/distutils/command/build_ext.py
 +++ b/Lib/distutils/command/build_ext.py
 @@ -231,7 +231,7 @@ class build_ext(Command):

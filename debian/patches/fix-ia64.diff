@@ -1,23 +1,20 @@
-From 0224b7180b280794b9fba62057b278ffb536c86f Mon Sep 17 00:00:00 2001
 From: Neil Schemenauer <nas-github@arctrix.com>
 Date: Thu, 21 Oct 2021 14:05:46 -0700
 Subject: [PATCH] bpo-45526: obmalloc radix use 64 addr bits (GH-29062)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 Co-authored-by: Łukasz Langa <lukasz@langa.pl>
 ---
- .../2021-10-19-10-29-47.bpo-45526.WQnvW9.rst  |  3 +
- Objects/obmalloc.c                            | 55 ++++++++++++-------
- 2 files changed, 38 insertions(+), 20 deletions(-)
- create mode 100644 Misc/NEWS.d/next/Core and Builtins/2021-10-19-10-29-47.bpo-45526.WQnvW9.rst
+ Objects/obmalloc.c | 55 ++++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 35 insertions(+), 20 deletions(-)
 
 diff --git a/Objects/obmalloc.c b/Objects/obmalloc.c
-index 2eddb2cafd..4e17bf44b4 100644
+index 615703a..259f78c 100644
 --- a/Objects/obmalloc.c
 +++ b/Objects/obmalloc.c
-@@ -1280,21 +1280,30 @@ _Py_GetAllocatedBlocks(void)
+@@ -1267,21 +1267,30 @@ _Py_GetAllocatedBlocks(void)
  
  #if WITH_PYMALLOC_RADIX_TREE
  /*==========================================================================*/
@@ -56,7 +53,7 @@ index 2eddb2cafd..4e17bf44b4 100644
       18 -> ideal aligned arena
     ----
       32
-@@ -1306,11 +1315,16 @@ _Py_GetAllocatedBlocks(void)
+@@ -1293,11 +1302,16 @@ _Py_GetAllocatedBlocks(void)
  /* number of bits in a pointer */
  #define POINTER_BITS 64
  
@@ -77,7 +74,7 @@ index 2eddb2cafd..4e17bf44b4 100644
  
  /* use the top and mid layers of the radix tree */
  #define USE_INTERIOR_NODES
-@@ -1318,7 +1332,7 @@ _Py_GetAllocatedBlocks(void)
+@@ -1305,7 +1319,7 @@ _Py_GetAllocatedBlocks(void)
  #elif SIZEOF_VOID_P == 4
  
  #define POINTER_BITS 32
@@ -86,7 +83,7 @@ index 2eddb2cafd..4e17bf44b4 100644
  
  #else
  
-@@ -1332,6 +1346,9 @@ _Py_GetAllocatedBlocks(void)
+@@ -1319,6 +1333,9 @@ _Py_GetAllocatedBlocks(void)
  #   error "arena size must be < 2^32"
  #endif
  
@@ -96,7 +93,7 @@ index 2eddb2cafd..4e17bf44b4 100644
  #ifdef USE_INTERIOR_NODES
  /* number of bits used for MAP_TOP and MAP_MID nodes */
  #define INTERIOR_BITS ((ADDRESS_BITS - ARENA_BITS + 2) / 3)
-@@ -1360,11 +1377,9 @@ _Py_GetAllocatedBlocks(void)
+@@ -1347,11 +1364,9 @@ _Py_GetAllocatedBlocks(void)
  #define MAP_MID_INDEX(p) ((AS_UINT(p) >> MAP_MID_SHIFT) & MAP_MID_MASK)
  #define MAP_TOP_INDEX(p) ((AS_UINT(p) >> MAP_TOP_SHIFT) & MAP_TOP_MASK)
  
@@ -111,7 +108,7 @@ index 2eddb2cafd..4e17bf44b4 100644
   */
  #define HIGH_BITS(p) (AS_UINT(p) >> ADDRESS_BITS)
  #else
-@@ -1416,7 +1431,7 @@ static arena_map_bot_t *
+@@ -1403,7 +1418,7 @@ static arena_map_bot_t *
  arena_map_get(block *p, int create)
  {
  #ifdef USE_INTERIOR_NODES
@@ -120,7 +117,7 @@ index 2eddb2cafd..4e17bf44b4 100644
      assert(HIGH_BITS(p) == HIGH_BITS(&arena_map_root));
      int i1 = MAP_TOP_INDEX(p);
      if (arena_map_root.ptrs[i1] == NULL) {
-@@ -1476,7 +1491,7 @@ arena_map_get(block *p, int create)
+@@ -1463,7 +1478,7 @@ arena_map_get(block *p, int create)
  static int
  arena_map_mark_used(uintptr_t arena_base, int is_used)
  {
@@ -129,6 +126,3 @@ index 2eddb2cafd..4e17bf44b4 100644
      assert(HIGH_BITS(arena_base) == HIGH_BITS(&arena_map_root));
      arena_map_bot_t *n_hi = arena_map_get((block *)arena_base, is_used);
      if (n_hi == NULL) {
--- 
-2.34.1
-

@@ -1,6 +1,17 @@
+From: Matthias Klose <doko@debian.org>
+Date: Tue, 12 Apr 2022 18:22:51 -0400
+Subject: sysconfig-debian-schemes
+
+---
+ Lib/sysconfig.py           | 42 +++++++++++++++++++++++++++++++++++++++---
+ Lib/test/test_sysconfig.py |  2 +-
+ 2 files changed, 40 insertions(+), 4 deletions(-)
+
+diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
+index daf9f00..9577f4e 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -36,6 +36,30 @@
+@@ -36,6 +36,30 @@ _INSTALL_SCHEMES = {
          'scripts': '{base}/bin',
          'data': '{base}',
          },
@@ -31,7 +42,7 @@
      'posix_home': {
          'stdlib': '{installed_base}/lib/python',
          'platstdlib': '{base}/lib/python',
-@@ -183,7 +207,7 @@
+@@ -183,7 +207,7 @@ def is_python_build(check_home=False):
  _PYTHON_BUILD = is_python_build(True)
  
  if _PYTHON_BUILD:
@@ -40,7 +51,7 @@
          # On POSIX-y platforms, Python will:
          # - Build from .h files in 'headers' (which is only added to the
          #   scheme when building CPython)
-@@ -237,8 +261,20 @@
+@@ -237,8 +261,20 @@ def _get_preferred_schemes():
              'home': 'posix_home',
              'user': 'osx_framework_user',
          }
@@ -62,7 +73,7 @@
          'home': 'posix_home',
          'user': 'posix_user',
      }
-@@ -538,7 +574,7 @@
+@@ -538,7 +574,7 @@ def get_config_h_filename():
          else:
              inc_dir = _sys_home or _PROJECT_BASE
      else:
@@ -71,9 +82,11 @@
      return os.path.join(inc_dir, 'pyconfig.h')
  
  
+diff --git a/Lib/test/test_sysconfig.py b/Lib/test/test_sysconfig.py
+index 9408657..0bb0cac 100644
 --- a/Lib/test/test_sysconfig.py
 +++ b/Lib/test/test_sysconfig.py
-@@ -263,7 +263,7 @@
+@@ -263,7 +263,7 @@ class TestSysConfig(unittest.TestCase):
          self.assertTrue(os.path.isfile(config_h), config_h)
  
      def test_get_scheme_names(self):

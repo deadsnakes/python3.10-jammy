@@ -1,9 +1,16 @@
-Description: Suggest installation of python3-tk package
- We split Tk out into a separate binary package. Help users who try to import
- it, without it installed.
+From: Matthias Klose <doko@debian.org>
+Date: Tue, 12 Apr 2022 18:22:51 -0400
+Subject: Suggest installation of python3-tk package
 
+We split Tk out into a separate binary package. Help users who try to import
+it, without it installed.
 Forwarded: not-needed
+---
+ Lib/tkinter/__init__.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/Lib/tkinter/__init__.py b/Lib/tkinter/__init__.py
+index fa88448..b1113d0 100644
 --- a/Lib/tkinter/__init__.py
 +++ b/Lib/tkinter/__init__.py
 @@ -34,7 +34,10 @@ import enum

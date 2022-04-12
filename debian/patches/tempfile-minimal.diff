@@ -1,9 +1,16 @@
-Description: Debian: Degrade tempfile gracefully without shutil
- python3.X-minimal includes tempfile but not shutil. Use a fallback racy
- rmtree, if shutil can't be imported.
+From: Matthias Klose <doko@debian.org>
+Date: Tue, 12 Apr 2022 18:22:51 -0400
+Subject: Debian: Degrade tempfile gracefully without shutil
 
+python3.X-minimal includes tempfile but not shutil. Use a fallback racy
+rmtree, if shutil can't be imported.
 Forwarded: not-needed
+---
+ Lib/tempfile.py | 143 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 141 insertions(+), 2 deletions(-)
 
+diff --git a/Lib/tempfile.py b/Lib/tempfile.py
+index 7b68212..2820e30 100644
 --- a/Lib/tempfile.py
 +++ b/Lib/tempfile.py
 @@ -40,7 +40,146 @@ import functools as _functools
@@ -154,7 +161,7 @@ Forwarded: not-needed
  import errno as _errno
  from random import Random as _Random
  import sys as _sys
-@@ -825,7 +964,7 @@ class TemporaryDirectory:
+@@ -829,7 +968,7 @@ class TemporaryDirectory:
                  if not ignore_errors:
                      raise
  

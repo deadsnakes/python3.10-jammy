@@ -1,13 +1,36 @@
-Description: Debian: Configure multiarch tuple.
- 1. Expose multiarchsubdir in sysconfig.
- 2. Return the multiarch include dir in distutils.
- 3. Install the .pc file into the multiarch path.
+From: Matthias Klose <doko@debian.org>
+Date: Tue, 12 Apr 2022 18:22:51 -0400
+Subject: Debian: Configure multiarch tuple.
 
+1. Expose multiarchsubdir in sysconfig.
+2. Return the multiarch include dir in distutils.
+3. Install the .pc file into the multiarch path.
 Forwarded: no
+---
+ Lib/distutils/sysconfig.py | 3 +++
+ Lib/sysconfig.py           | 6 ++++++
+ Makefile.pre.in            | 1 +
+ 3 files changed, 10 insertions(+)
 
+diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
+index 093da54..572daf0 100644
+--- a/Lib/distutils/sysconfig.py
++++ b/Lib/distutils/sysconfig.py
+@@ -307,6 +307,9 @@ def get_python_inc(plat_specific=0, prefix=None):
+                 incdir = os.path.join(get_config_var('srcdir'), 'Include')
+                 return os.path.normpath(incdir)
+         python_dir = 'python' + get_python_version() + build_flags
++        if not python_build and plat_specific:
++            import sysconfig
++            return sysconfig.get_path('platinclude')
+         return os.path.join(prefix, "include", python_dir)
+     elif os.name == "nt":
+         if python_build:
+diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
+index 9577f4e..871a38d 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -623,6 +623,12 @@ def get_config_vars(*args):
+@@ -659,6 +659,12 @@ def get_config_vars(*args):
              # the init-function.
              _CONFIG_VARS['userbase'] = _getuserbase()
  
@@ -20,21 +43,11 @@ Forwarded: no
          # Always convert srcdir to an absolute path
          srcdir = _CONFIG_VARS.get('srcdir', _PROJECT_BASE)
          if os.name == 'posix':
---- a/Lib/distutils/sysconfig.py
-+++ b/Lib/distutils/sysconfig.py
-@@ -303,6 +303,9 @@ def get_python_inc(plat_specific=0, pref
-                 incdir = os.path.join(get_config_var('srcdir'), 'Include')
-                 return os.path.normpath(incdir)
-         python_dir = 'python' + get_python_version() + build_flags
-+        if not python_build and plat_specific:
-+            import sysconfig
-+            return sysconfig.get_path('platinclude')
-         return os.path.join(prefix, "include", python_dir)
-     elif os.name == "nt":
-         if python_build:
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index b4d4d5c..ac3d37c 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -824,6 +824,7 @@ Modules/signalmodule.o: $(srcdir)/Module
+@@ -825,6 +825,7 @@ Modules/signalmodule.o: $(srcdir)/Modules/signalmodule.c $(srcdir)/Modules/posix
  
  Python/dynload_shlib.o: $(srcdir)/Python/dynload_shlib.c Makefile
  	$(CC) -c $(PY_CORE_CFLAGS) \

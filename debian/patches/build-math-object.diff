@@ -1,9 +1,16 @@
-Description: Arch: Don't build builtins like math.o with -fPIC
- Fixes build failure on on Debian/kFreeBSD.
- FIXME: Why? Remove noop sed from debian/rules?
+From: Matthias Klose <doko@debian.org>
+Date: Tue, 12 Apr 2022 18:22:51 -0400
+Subject: Arch: Don't build builtins like math.o with -fPIC
 
+Fixes build failure on on Debian/kFreeBSD.
+FIXME: Why? Remove noop sed from debian/rules?
 Forwarded: no
+---
+ Makefile.pre.in | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index e284e10..e21b4de 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
 @@ -22,7 +22,8 @@
@@ -16,7 +23,7 @@ Forwarded: no
  MODLIBS=           _MODLIBS_
  
  # === Variables set by configure
-@@ -617,8 +618,9 @@ pybuilddir.txt: $(BUILDPYTHON)
+@@ -618,8 +619,9 @@ pybuilddir.txt: $(BUILDPYTHON)
  	fi
  
  # This is shared by the math and cmath modules

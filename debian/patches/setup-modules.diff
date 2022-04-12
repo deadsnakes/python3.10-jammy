@@ -1,9 +1,16 @@
-Description: Configure linking for C-library wrapping modules
- Use the system C libraries, rather than sources bundled with cPython, or
- anything from /usr/local.
+From: Matthias Klose <doko@debian.org>
+Date: Tue, 12 Apr 2022 18:22:51 -0400
+Subject: Configure linking for C-library wrapping modules
 
+Use the system C libraries, rather than sources bundled with cPython, or
+anything from /usr/local.
 Forwarded: not-needed
+---
+ Modules/Setup | 23 ++++++-----------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
 
+diff --git a/Modules/Setup b/Modules/Setup
+index 87c6a15..cd09825 100644
 --- a/Modules/Setup
 +++ b/Modules/Setup
 @@ -175,7 +175,7 @@ _symtable symtablemodule.c
