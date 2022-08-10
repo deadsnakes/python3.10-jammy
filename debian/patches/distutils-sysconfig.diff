@@ -1,18 +1,10 @@
-From: Matthias Klose <doko@debian.org>
-Date: Tue, 12 Apr 2022 18:22:51 -0400
-Subject: distutils: Use python's compiler arguments by default
+Description: distutils: Use python's compiler arguments by default
+ Get CONFIGURE_CFLAGS, CONFIGURE_CPPFLAGS, CONFIGURE_LDFLAGS from
+ the python build, when CFLAGS, CPPFLAGS, LDSHARED) are not set
+ in the environment.
 
-Get CONFIGURE_CFLAGS, CONFIGURE_CPPFLAGS, CONFIGURE_LDFLAGS from
-the python build, when CFLAGS, CPPFLAGS, LDSHARED) are not set
-in the environment.
 Forwarded: no
----
- Lib/distutils/sysconfig.py            | 17 ++++++++++++++---
- Lib/distutils/tests/test_sysconfig.py | 16 ++++++++--------
- 2 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
-index af2f740..093da54 100644
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
 @@ -216,9 +216,11 @@ def customize_compiler(compiler):
@@ -61,11 +53,9 @@ index af2f740..093da54 100644
              linker_exe=cc,
              archiver=archiver)
  
-diff --git a/Lib/distutils/tests/test_sysconfig.py b/Lib/distutils/tests/test_sysconfig.py
-index 59676b0..1f68696 100644
 --- a/Lib/distutils/tests/test_sysconfig.py
 +++ b/Lib/distutils/tests/test_sysconfig.py
-@@ -156,18 +156,18 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
+@@ -156,18 +156,18 @@ class SysconfigTestCase(support.EnvironG
          comp = self.customize_compiler()
          self.assertEqual(comp.exes['archiver'],
                           'sc_ar --sc-arflags')

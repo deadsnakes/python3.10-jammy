@@ -1,8 +1,34 @@
-python3.10 (3.10.4-3+deadsnakes1) jammy; urgency=medium
+python3.10 (3.10.6-1~22.04) jammy-proposed; urgency=medium
 
-  * Add `venv` scheme to sysconfig.
+  * SRU: LP: #1982108: Backport 3.10.6 to 20.04 LTS.
 
- -- Anthony Sottile <asottile@umich.edu>  Tue, 12 Apr 2022 18:30:32 -0400
+ -- Matthias Klose <doko@ubuntu.com>  Wed, 10 Aug 2022 13:40:04 +0200
+
+python3.10 (3.10.6-1) unstable; urgency=medium
+
+  * Python 3.10.6 release.
+
+  [ Leonidas Da Silva Barbosa ]
+  * SECURITY UPDATE: Injection Attack
+    - debian/patches/CVE-2015-20107.patch: Make mailcap refuse to match unsafe
+      filenames/types/param in Lib/mailcap.py, Lib/test/test_mailcap.py.
+    - CVE-2015-20107
+
+ -- Matthias Klose <doko@debian.org>  Wed, 10 Aug 2022 13:19:32 +0200
+
+python3.10 (3.10.5-1) unstable; urgency=medium
+
+  * Python 3.10.5 release.
+  * Update VCS attributes.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 08 Jun 2022 11:26:22 +0200
+
+python3.10 (3.10.4-4) unstable; urgency=medium
+
+  * Source-only upload.
+  * Backport gh-78214: marshal: Stabilize FLAG_REF usage. Closes: #1010368.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 13 May 2022 14:08:11 +0200
 
 python3.10 (3.10.4-3) unstable; urgency=medium
 

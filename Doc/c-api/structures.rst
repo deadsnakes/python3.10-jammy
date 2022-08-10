@@ -309,8 +309,6 @@ There are these calling conventions:
    or possibly ``NULL`` if there are no keywords.  The values of the keyword
    arguments are stored in the *args* array, after the positional arguments.
 
-   This is not part of the :ref:`limited API <stable>`.
-
    .. versionadded:: 3.7
 
 
@@ -494,7 +492,7 @@ Accessing attributes of extension types
    +=============+==================+===================================+
    | name        | const char \*    | attribute name                    |
    +-------------+------------------+-----------------------------------+
-   | get         | getter           | C Function to get the attribute   |
+   | get         | getter           | C function to get the attribute   |
    +-------------+------------------+-----------------------------------+
    | set         | setter           | optional C function to set or     |
    |             |                  | delete the attribute, if omitted  |

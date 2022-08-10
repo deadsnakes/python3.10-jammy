@@ -1,19 +1,11 @@
-From: Matthias Klose <doko@debian.org>
-Date: Tue, 12 Apr 2022 18:22:51 -0400
-Subject: Implement the native thread ids for the Hurd and KFreeBSD
-
+Description: Implement the native thread ids for the Hurd and KFreeBSD
+Author: Samuel Thibault
 Bug-Debian: https://bugs.debian.org/931624
 Forwarded: https://bugs.python.org/issue37744
----
- Include/pythread.h      |  2 +-
- Python/thread_pthread.h | 12 ++++++++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/Include/pythread.h b/Include/pythread.h
-index bb9d864..a1d6af3 100644
 --- a/Include/pythread.h
 +++ b/Include/pythread.h
-@@ -25,7 +25,7 @@ PyAPI_FUNC(unsigned long) PyThread_start_new_thread(void (*)(void *), void *);
+@@ -25,7 +25,7 @@ PyAPI_FUNC(unsigned long) PyThread_start
  PyAPI_FUNC(void) _Py_NO_RETURN PyThread_exit_thread(void);
  PyAPI_FUNC(unsigned long) PyThread_get_thread_ident(void);
  
@@ -22,8 +14,6 @@ index bb9d864..a1d6af3 100644
  #define PY_HAVE_THREAD_NATIVE_ID
  PyAPI_FUNC(unsigned long) PyThread_get_thread_native_id(void);
  #endif
-diff --git a/Python/thread_pthread.h b/Python/thread_pthread.h
-index 35b9810..dde8a1d 100644
 --- a/Python/thread_pthread.h
 +++ b/Python/thread_pthread.h
 @@ -17,12 +17,17 @@
@@ -44,7 +34,7 @@ index 35b9810..dde8a1d 100644
  #endif
  
  /* The POSIX spec requires that use of pthread_attr_setstacksize
-@@ -350,6 +355,9 @@ PyThread_get_thread_native_id(void)
+@@ -342,6 +347,9 @@ PyThread_get_thread_native_id(void)
  #elif defined(__FreeBSD__)
      int native_id;
      native_id = pthread_getthreadid_np();
@@ -54,7 +44,7 @@ index 35b9810..dde8a1d 100644
  #elif defined(__OpenBSD__)
      pid_t native_id;
      native_id = getthrid();
-@@ -359,6 +367,10 @@ PyThread_get_thread_native_id(void)
+@@ -351,6 +359,10 @@ PyThread_get_thread_native_id(void)
  #elif defined(__NetBSD__)
      lwpid_t native_id;
      native_id = _lwp_self();

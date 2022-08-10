@@ -1,19 +1,12 @@
-From: Matthias Klose <doko@debian.org>
-Date: Tue, 12 Apr 2022 18:22:51 -0400
-Subject: Keep the lib-dynload dir in the same place when configuring with
+Description: Keep the lib-dynload dir in the same place when configuring with
+ --libdir=/usr/bin/$(DEB_HOST_MULTIARCH)
+ FIXME: Expand?
 
---libdir=/usr/bin/$(DEB_HOST_MULTIARCH)
-FIXME: Expand?
 Forwarded: no
----
- Makefile.pre.in | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile.pre.in b/Makefile.pre.in
-index bf7277e..99c0839 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -161,7 +161,7 @@ EXT_SUFFIX=	@EXT_SUFFIX@
+@@ -160,7 +160,7 @@ EXT_SUFFIX=	@EXT_SUFFIX@
  LDSHARED=	@LDSHARED@ $(PY_LDFLAGS)
  BLDSHARED=	@BLDSHARED@ $(PY_CORE_LDFLAGS)
  LDCXXSHARED=	@LDCXXSHARED@

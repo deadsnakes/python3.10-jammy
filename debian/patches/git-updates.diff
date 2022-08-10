@@ -1,0 +1,6 @@
+Description: Updates from the 3.10 branch (until 2022-03-13).
+ We pick the latest updates from the maintainance branch, and carry them in a
+ patch, rather than creating and uploading uploading a new .orig tarball.
+
+# git diff --no-renames a58ebcc701dd6c43630df941481475ff0f615a81 d8ba5c102c54a5f0944638df4b6cda689faba7fa | filterdiff -x ?/.hgignore -x ?/.hgeol -x ?/.hgtags -x ?/.hgtouch -x ?/.gitignore -x ?/.gitattributes -x '?/.github/*' -x '?/.git*' -x ?/.codecov.yml -x ?/.travis.yml -x ?/configure --remove-timestamps
+

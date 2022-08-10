@@ -1,15 +1,7 @@
-From: Matthias Klose <doko@debian.org>
-Date: Tue, 12 Apr 2022 18:22:51 -0400
-Subject: Debian: Reference the local path to the documentation
+Description: Debian: Reference the local path to the documentation
 
 Forwarded: not-needed
----
- Doc/tools/templates/layout.html | 2 +-
- Lib/idlelib/help.html           | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Doc/tools/templates/layout.html b/Doc/tools/templates/layout.html
-index 98ccf42..c7b22d3 100644
 --- a/Doc/tools/templates/layout.html
 +++ b/Doc/tools/templates/layout.html
 @@ -18,7 +18,7 @@
@@ -21,8 +13,6 @@ index 98ccf42..c7b22d3 100644
      {% if builder != "htmlhelp" %}
        {% if pagename == 'whatsnew/changelog' and not embedded %}
        <script type="text/javascript" src="{{ pathto('_static/changelog_search.js', 1) }}"></script>{% endif %}
-diff --git a/Lib/idlelib/help.html b/Lib/idlelib/help.html
-index 41626ec..010856d 100644
 --- a/Lib/idlelib/help.html
 +++ b/Lib/idlelib/help.html
 @@ -26,7 +26,7 @@

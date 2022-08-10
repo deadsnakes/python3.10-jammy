@@ -1,18 +1,11 @@
-From: Matthias Klose <doko@debian.org>
-Date: Tue, 12 Apr 2022 18:22:51 -0400
-Subject: Ignore errors in the profile task.
+Description: Ignore errors in the profile task.
+ FIXME: Back story?
 
-FIXME: Back story?
 Forwarded: no
----
- Makefile.pre.in | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/Makefile.pre.in b/Makefile.pre.in
-index ee85f35..b4d4d5c 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -521,6 +521,16 @@ build_all_generate_profile:
+@@ -520,6 +520,16 @@ build_all_generate_profile:
  run_profile_task:
  	@ # FIXME: can't run for a cross build
  	$(LLVM_PROF_FILE) $(RUNSHARED) ./$(BUILDPYTHON) $(PROFILE_TASK) || true

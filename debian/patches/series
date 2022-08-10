@@ -1,3 +1,4 @@
+#git-updates.diff
 deb-setup.diff
 deb-locations.diff
 distutils-install-layout.diff
@@ -14,6 +15,8 @@ langpack-gettext.diff
 disable-sem-check.diff
 lib-argparse.diff
 ctypes-arm.diff
+# link-timemodule.diff
+#lto-link-flags.diff
 multiarch.diff
 lib2to3-no-pickled-grammar.diff
 ext-no-libpython-link.diff
@@ -36,4 +39,5 @@ destshared-location.diff
 fix-py_compile.diff
 reproducible-pyc.diff
 fix-ia64.diff
-venv-scheme.diff
+gh-78214.diff
+CVE-2015-20107.patch

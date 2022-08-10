@@ -1,20 +1,12 @@
-From: Matthias Klose <doko@debian.org>
-Date: Tue, 12 Apr 2022 18:22:51 -0400
-Subject: Disable ensurepip for the system installation
+Description: Disable ensurepip for the system installation
+ We have a python3-pip package, for users who want pip.
+ We just need ensurepip to seed pip in virtual environments.
 
-We have a python3-pip package, for users who want pip.
-We just need ensurepip to seed pip in virtual environments.
 Forwarded: not-needed
----
- Lib/ensurepip/__init__.py | 33 +++++++++++++++++++++++++++++++++
- Lib/venv/__init__.py      | 26 +++++++++++++++++++++++++-
- 2 files changed, 58 insertions(+), 1 deletion(-)
 
-diff --git a/Lib/ensurepip/__init__.py b/Lib/ensurepip/__init__.py
-index 3fbe8b2..5ac7ec3 100644
 --- a/Lib/ensurepip/__init__.py
 +++ b/Lib/ensurepip/__init__.py
-@@ -8,6 +8,34 @@ import tempfile
+@@ -8,6 +8,34 @@
  from importlib import resources
  
  
@@ -49,7 +41,7 @@ index 3fbe8b2..5ac7ec3 100644
  
  __all__ = ["version", "bootstrap"]
  _PACKAGE_NAMES = ('setuptools', 'pip')
-@@ -137,6 +165,11 @@ def _bootstrap(*, root=None, upgrade=False, user=False,
+@@ -137,6 +165,11 @@
  
      Note that calling this function will alter both sys.path and os.environ.
      """
@@ -61,11 +53,9 @@ index 3fbe8b2..5ac7ec3 100644
      if altinstall and default_pip:
          raise ValueError("Cannot use altinstall and default_pip together")
  
-diff --git a/Lib/venv/__init__.py b/Lib/venv/__init__.py
-index 6f1af29..2f34190 100644
 --- a/Lib/venv/__init__.py
 +++ b/Lib/venv/__init__.py
-@@ -310,7 +310,31 @@ class EnvBuilder:
+@@ -309,7 +309,31 @@
          # intended for the global Python environment
          cmd = [context.env_exec_cmd, '-Im', 'ensurepip', '--upgrade',
                                                           '--default-pip']

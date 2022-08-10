@@ -1,21 +1,11 @@
-From: Matthias Klose <doko@debian.org>
-Date: Tue, 12 Apr 2022 18:22:51 -0400
-Subject: Arch: Workaround the presence of hard-float in ldconfig -p output.
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Description: Arch: Workaround the presence of hard-float in ldconfig -p output.
+ Also, handle the wide variety of ARM unames.
 
-Also, handle the wide variety of ARM unames.
 Author: Loïc Minier
 Bug-Ubuntu: https://bugs.launchpad.net/bugs/898172
 Bug-cpython: http://bugs.python.org/issue13508
 Forwarded: yes
----
- Lib/ctypes/util.py | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/Lib/ctypes/util.py b/Lib/ctypes/util.py
-index 0c2510e..3907247 100644
 --- a/Lib/ctypes/util.py
 +++ b/Lib/ctypes/util.py
 @@ -269,16 +269,27 @@ elif os.name == "posix":

@@ -1,30 +1,9 @@
-From: Matthias Klose <doko@debian.org>
-Date: Tue, 12 Apr 2022 18:22:51 -0400
-Subject: Allow building with Sphinx >= 3.2
+Description: Allow building with Sphinx >= 3.2
+ Additionally: Disable sphinx warnings
 
-Additionally: Disable sphinx warnings
 Bug-cython: https://bugs.python.org/issue40204
 Origin: upstream, https://github.com/python/cpython/commit/423e77d6de497931585d1883805a9e3fa4096b0b
----
- Doc/Makefile | 2 +-
- Doc/conf.py  | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Doc/Makefile b/Doc/Makefile
-index b09bb81..4ff4e39 100644
---- a/Doc/Makefile
-+++ b/Doc/Makefile
-@@ -11,7 +11,7 @@ BLURB        = PATH=$(VENVDIR)/bin:$$PATH blurb
- PAPER        =
- SOURCES      =
- DISTVERSION  = $(shell $(PYTHON) tools/extensions/patchlevel.py)
--SPHINXERRORHANDLING = -W
-+#SPHINXERRORHANDLING = -W
- 
- # Internal variables.
- PAPEROPT_a4     = -D latex_elements.papersize=a4paper
-diff --git a/Doc/conf.py b/Doc/conf.py
-index cbf201a..d67572a 100644
 --- a/Doc/conf.py
 +++ b/Doc/conf.py
 @@ -61,6 +61,10 @@ smartquotes_excludes = {
@@ -38,3 +17,14 @@ index cbf201a..d67572a 100644
  # Options for HTML output
  # -----------------------
  
+--- a/Doc/Makefile
++++ b/Doc/Makefile
+@@ -11,7 +11,7 @@ BLURB        = PATH=$(VENVDIR)/bin:$$PAT
+ PAPER        =
+ SOURCES      =
+ DISTVERSION  = $(shell $(PYTHON) tools/extensions/patchlevel.py)
+-SPHINXERRORHANDLING = -W
++#SPHINXERRORHANDLING = -W
+ 
+ # Internal variables.
+ PAPEROPT_a4     = -D latex_elements.papersize=a4paper

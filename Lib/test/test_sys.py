@@ -1078,8 +1078,8 @@ class UnraisableHookTest(unittest.TestCase):
         with test.support.captured_stderr() as stderr, \
              test.support.swap_attr(sys, 'unraisablehook',
                                     sys.__unraisablehook__):
-                 expected = self.write_unraisable_exc(
-                     A.B.X(), "msg", "obj");
+            expected = self.write_unraisable_exc(
+                A.B.X(), "msg", "obj");
         report = stderr.getvalue()
         testName = 'test_original_unraisablehook_exception_qualname'
         self.assertIn(f"{testName}.<locals>.A.B.X", report)
@@ -1317,9 +1317,10 @@ class SizeofTest(unittest.TestCase):
         import re
         check(re.finditer('',''), size('2P'))
         # list
-        samples = [[], [1,2,3], ['1', '2', '3']]
-        for sample in samples:
-            check(list(sample), vsize('Pn') + len(sample)*self.P)
+        check(list([]), vsize('Pn'))
+        check(list([1]), vsize('Pn') + 2*self.P)
+        check(list([1, 2]), vsize('Pn') + 2*self.P)
+        check(list([1, 2, 3]), vsize('Pn') + 4*self.P)
         # sortwrapper (list)
         # XXX
         # cmpwrapper (list)
