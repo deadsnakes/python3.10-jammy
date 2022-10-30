@@ -124,7 +124,7 @@ Logging to a file
 ^^^^^^^^^^^^^^^^^
 
 A very common situation is that of recording logging events in a file, so let's
-look at that next. Be sure to try the following in a newly-started Python
+look at that next. Be sure to try the following in a newly started Python
 interpreter, and don't just continue from the session described above::
 
    import logging
@@ -178,10 +178,11 @@ following example::
        raise ValueError('Invalid log level: %s' % loglevel)
    logging.basicConfig(level=numeric_level, ...)
 
-The call to :func:`basicConfig` should come *before* any calls to :func:`debug`,
-:func:`info` etc. As it's intended as a one-off simple configuration facility,
-only the first call will actually do anything: subsequent calls are effectively
-no-ops.
+The call to :func:`basicConfig` should come *before* any calls to
+:func:`debug`, :func:`info`, etc. Otherwise, those functions will call
+:func:`basicConfig` for you with the default options. As it's intended as a
+one-off simple configuration facility, only the first call will actually do
+anything: subsequent calls are effectively no-ops.
 
 If you run the above script several times, the messages from successive runs
 are appended to the file *example.log*. If you want each run to start afresh,

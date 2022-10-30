@@ -369,22 +369,26 @@ type_mro_modified(PyTypeObject *type, PyObject *bases) {
     Py_ssize_t i, n;
     int custom = !Py_IS_TYPE(type, &PyType_Type);
     int unbound;
-    PyObject *mro_meth = NULL;
-    PyObject *type_mro_meth = NULL;
 
     if (custom) {
+        PyObject *mro_meth, *type_mro_meth;
         mro_meth = lookup_maybe_method(
             (PyObject *)type, &PyId_mro, &unbound);
-        if (mro_meth == NULL)
+        if (mro_meth == NULL) {
             goto clear;
+        }
         type_mro_meth = lookup_maybe_method(
             (PyObject *)&PyType_Type, &PyId_mro, &unbound);
-        if (type_mro_meth == NULL)
+        if (type_mro_meth == NULL) {
+            Py_DECREF(mro_meth);
             goto clear;
-        if (mro_meth != type_mro_meth)
+        }
+        int custom_mro = (mro_meth != type_mro_meth);
+        Py_DECREF(mro_meth);
+        Py_DECREF(type_mro_meth);
+        if (custom_mro) {
             goto clear;
-        Py_XDECREF(mro_meth);
-        Py_XDECREF(type_mro_meth);
+        }
     }
     n = PyTuple_GET_SIZE(bases);
     for (i = 0; i < n; i++) {
@@ -400,8 +404,6 @@ type_mro_modified(PyTypeObject *type, PyObject *bases) {
     }
     return;
  clear:
-    Py_XDECREF(mro_meth);
-    Py_XDECREF(type_mro_meth);
     type->tp_flags &= ~Py_TPFLAGS_VALID_VERSION_TAG;
     type->tp_version_tag = 0; /* 0 is not a valid version tag */
 }
@@ -6398,8 +6400,11 @@ add_subclass(PyTypeObject *base, PyTypeObject *type)
     PyObject *dict = base->tp_subclasses;
     if (dict == NULL) {
         base->tp_subclasses = dict = PyDict_New();
-        if (dict == NULL)
+        if (dict == NULL) {
+            Py_DECREF(key);
+            Py_DECREF(ref);
             return -1;
+        }
     }
     assert(PyDict_CheckExact(dict));
 
@@ -6902,7 +6907,7 @@ wrap_descr_get(PyObject *self, PyObject *args, void *wrapped)
         obj = NULL;
     if (type == Py_None)
         type = NULL;
-    if (type == NULL &&obj == NULL) {
+    if (type == NULL && obj == NULL) {
         PyErr_SetString(PyExc_TypeError,
                         "__get__(None, None) is invalid");
         return NULL;
@@ -7945,7 +7950,7 @@ static slotdef slotdefs[] = {
     TPSLOT("__next__", tp_iternext, slot_tp_iternext, wrap_next,
            "__next__($self, /)\n--\n\nImplement next(self)."),
     TPSLOT("__get__", tp_descr_get, slot_tp_descr_get, wrap_descr_get,
-           "__get__($self, instance, owner, /)\n--\n\nReturn an attribute of instance, which is of type owner."),
+           "__get__($self, instance, owner=None, /)\n--\n\nReturn an attribute of instance, which is of type owner."),
     TPSLOT("__set__", tp_descr_set, slot_tp_descr_set, wrap_descr_set,
            "__set__($self, instance, value, /)\n--\n\nSet an attribute of instance to value."),
     TPSLOT("__delete__", tp_descr_set, slot_tp_descr_set,

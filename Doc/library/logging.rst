@@ -30,9 +30,17 @@ is that all Python modules can participate in logging, so your application log
 can include your own messages integrated with messages from third-party
 modules.
 
+The simplest example:
+
+.. code-block:: none
+
+    >>> import logging
+    >>> logging.warning('Watch out!')
+    WARNING:root:Watch out!
+
 The module provides a lot of functionality and flexibility.  If you are
-unfamiliar with logging, the best way to get to grips with it is to see the
-tutorials (see the links on the right).
+unfamiliar with logging, the best way to get to grips with it is to view the
+tutorials (**see the links above and on the right**).
 
 The basic classes defined by the module, together with their functions, are
 listed below.
@@ -225,7 +233,7 @@ is the module's name in the Python package namespace.
          2006-02-08 22:20:02,165 192.168.0.1 fbloggs  Protocol problem: connection reset
 
       The keys in the dictionary passed in *extra* should not clash with the keys used
-      by the logging system. (See the :class:`Formatter` documentation for more
+      by the logging system. (See the section on :ref:`logrecord-attributes` for more
       information on which keys are used by the logging system.)
 
       If you choose to use these attributes in logged messages, you need to exercise
@@ -241,6 +249,10 @@ is the module's name in the Python package namespace.
       context (such as remote client IP address and authenticated user name, in the
       above example). In such circumstances, it is likely that specialized
       :class:`Formatter`\ s would be used with particular :class:`Handler`\ s.
+
+      If no handler is attached to this logger (or any of its ancestors,
+      taking into account the relevant :attr:`Logger.propagate` attributes),
+      the message will be sent to the handler set on :attr:`lastResort`.
 
       .. versionchanged:: 3.2
          The *stack_info* parameter was added.
@@ -1038,6 +1050,10 @@ functions.
    above example). In such circumstances, it is likely that specialized
    :class:`Formatter`\ s would be used with particular :class:`Handler`\ s.
 
+   This function (as well as :func:`info`, :func:`warning`, :func:`error` and
+   :func:`critical`) will call :func:`basicConfig` if the root logger doesn't
+   have any handler attached.
+
    .. versionchanged:: 3.2
       The *stack_info* parameter was added.
 
@@ -1079,16 +1095,6 @@ functions.
 
    Logs a message with level *level* on the root logger. The other arguments are
    interpreted as for :func:`debug`.
-
-   .. note:: The above module-level convenience functions, which delegate to the
-      root logger, call :func:`basicConfig` to ensure that at least one handler
-      is available. Because of this, they should *not* be used in threads,
-      in versions of Python earlier than 2.7.1 and 3.2, unless at least one
-      handler has been added to the root logger *before* the threads are
-      started. In earlier versions of Python, due to a thread safety shortcoming
-      in :func:`basicConfig`, this can (under rare circumstances) lead to
-      handlers being added multiple times to the root logger, which can in turn
-      lead to multiple messages for the same event.
 
 .. function:: disable(level=CRITICAL)
 

@@ -230,8 +230,8 @@ ABC hierarchy::
 
     object
      +-- Finder (deprecated)
-     |    +-- MetaPathFinder
-     |    +-- PathEntryFinder
+     +-- MetaPathFinder
+     +-- PathEntryFinder
      +-- Loader
           +-- ResourceLoader --------+
           +-- InspectLoader          |
@@ -264,8 +264,7 @@ ABC hierarchy::
 
 .. class:: MetaPathFinder
 
-   An abstract base class representing a :term:`meta path finder`. For
-   compatibility, this is a subclass of :class:`Finder`.
+   An abstract base class representing a :term:`meta path finder`.
 
    .. versionadded:: 3.3
 
@@ -448,7 +447,7 @@ ABC hierarchy::
             package. This attribute is not set on modules.
 
         - :attr:`__package__`
-            The fully-qualified name of the package under which the module was
+            The fully qualified name of the package under which the module was
             loaded as a submodule (or the empty string for top-level modules).
             For packages, it is the same as :attr:`__name__`.  The
             :func:`importlib.util.module_for_loader` decorator can handle the
@@ -1411,7 +1410,7 @@ find and load modules.
 
    (``__name__``)
 
-   A string for the fully-qualified name of the module.
+   A string for the fully qualified name of the module.
 
    .. attribute:: loader
 
@@ -1451,7 +1450,7 @@ find and load modules.
 
    (``__package__``)
 
-   (Read-only) The fully-qualified name of the package under which the module
+   (Read-only) The fully qualified name of the package under which the module
    should be loaded as a submodule (or the empty string for top-level modules).
    For packages, it is the same as :attr:`__name__`.
 
@@ -1750,6 +1749,9 @@ Checking if a module can be imported
 
 If you need to find out if a module can be imported without actually doing the
 import, then you should use :func:`importlib.util.find_spec`.
+
+Note that if ``name`` is a submodule (contains a dot),
+:func:`importlib.util.find_spec` will import the parent module.
 ::
 
   import importlib.util

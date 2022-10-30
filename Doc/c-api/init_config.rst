@@ -16,12 +16,12 @@ There are two kinds of configuration:
 
 * The :ref:`Python Configuration <init-python-config>` can be used to build a
   customized Python which behaves as the regular Python. For example,
-  environments variables and command line arguments are used to configure
+  environment variables and command line arguments are used to configure
   Python.
 
 * The :ref:`Isolated Configuration <init-isolated-conf>` can be used to embed
   Python into an application. It isolates Python from the system. For example,
-  environments variables are ignored, the LC_CTYPE locale is left unchanged and
+  environment variables are ignored, the LC_CTYPE locale is left unchanged and
   no signal handler is registered.
 
 The :c:func:`Py_RunMain` function can be used to write a customized Python
@@ -689,9 +689,8 @@ PyConfig
 
       * ``"utf-8"`` if :c:member:`PyPreConfig.utf8_mode` is non-zero.
       * ``"ascii"`` if Python detects that ``nl_langinfo(CODESET)`` announces
-        the ASCII encoding (or Roman8 encoding on HP-UX), whereas the
-        ``mbstowcs()`` function decodes from a different encoding (usually
-        Latin1).
+        the ASCII encoding, whereas the ``mbstowcs()`` function
+        decodes from a different encoding (usually Latin1).
       * ``"utf-8"`` if ``nl_langinfo(CODESET)`` returns an empty string.
       * Otherwise, use the :term:`locale encoding`:
         ``nl_langinfo(CODESET)`` result.
@@ -1287,7 +1286,7 @@ Isolated Configuration
 isolate Python from the system. For example, to embed Python into an
 application.
 
-This configuration ignores global configuration variables, environments
+This configuration ignores global configuration variables, environment
 variables, command line arguments (:c:member:`PyConfig.argv` is not parsed)
 and user site directory. The C standard streams (ex: ``stdout``) and the
 LC_CTYPE locale are left unchanged. Signal handlers are not installed.
@@ -1432,7 +1431,7 @@ Multi-Phase Initialization Private Provisional API
 ==================================================
 
 This section is a private provisional API introducing multi-phase
-initialization, the core feature of the :pep:`432`:
+initialization, the core feature of :pep:`432`:
 
 * "Core" initialization phase, "bare minimum Python":
 
