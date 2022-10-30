@@ -1,8 +1,15 @@
+From: Matthias Klose <doko@debian.org>
+Date: Sat, 29 Oct 2022 21:23:32 -0400
+Subject: gh-78214
+
 ``marshal.dumps()`` uses ``FLAG_REF`` for all interned strings.  This makes
 output more deterministic and helps reproducible build.
+---
+ Python/marshal.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/Python/marshal.c b/Python/marshal.c
-index bbe67e3379fd9..90a4405091800 100644
+index 6bd4537..be72424 100644
 --- a/Python/marshal.c
 +++ b/Python/marshal.c
 @@ -298,9 +298,14 @@ w_ref(PyObject *v, char *flag, WFILE *p)

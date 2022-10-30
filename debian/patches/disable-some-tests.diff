@@ -1,6 +1,14 @@
-Description: Arch: Disable some failing tests we are not interested in
-Forwarded: no
+From: Matthias Klose <doko@debian.org>
+Date: Sat, 29 Oct 2022 21:23:31 -0400
+Subject: Arch: Disable some failing tests we are not interested in
 
+Forwarded: no
+---
+ Lib/distutils/tests/test_build_ext.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Lib/distutils/tests/test_build_ext.py b/Lib/distutils/tests/test_build_ext.py
+index 8e7364d..76c8c3a 100644
 --- a/Lib/distutils/tests/test_build_ext.py
 +++ b/Lib/distutils/tests/test_build_ext.py
 @@ -115,6 +115,7 @@ class BuildExtTestCase(TempdirManager,

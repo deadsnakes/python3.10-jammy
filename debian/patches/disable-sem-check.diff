@@ -1,12 +1,19 @@
-Description: Debian: Don't autodetect whether semephores are present
- Assume working semaphores, don't rely on running kernel for the check.
- Build machine != Target machine.
+From: Matthias Klose <doko@debian.org>
+Date: Sat, 29 Oct 2022 21:23:31 -0400
+Subject: Debian: Don't autodetect whether semephores are present
 
+Assume working semaphores, don't rely on running kernel for the check.
+Build machine != Target machine.
 Forwarded: not-needed
+---
+ configure.ac | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
+diff --git a/configure.ac b/configure.ac
+index 82f3ddd..949be41 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -4638,8 +4638,13 @@ int main(void) {
+@@ -4664,8 +4664,13 @@ int main(void) {
  AC_MSG_RESULT($ac_cv_posix_semaphores_enabled)
  if test $ac_cv_posix_semaphores_enabled = no
  then
@@ -22,7 +29,7 @@ Forwarded: not-needed
  fi
  
  # Multiprocessing check for broken sem_getvalue
-@@ -4674,8 +4679,13 @@ int main(void){
+@@ -4700,8 +4705,13 @@ int main(void){
  AC_MSG_RESULT($ac_cv_broken_sem_getvalue)
  if test $ac_cv_broken_sem_getvalue = yes
  then

@@ -1,15 +1,22 @@
-Description: Ubuntu: Support separate langpack packages
- Support alternative gettext tree in /usr/share/locale-langpack; if a file is
- present in both trees, prefer the newer one.
- Ubuntu collates gettext from packages on the DVD into language packs, to
- reduce disk-space on the image.
- This is Ubuntu-Specific.
+From: Matthias Klose <doko@debian.org>
+Date: Sat, 29 Oct 2022 21:23:31 -0400
+Subject: Ubuntu: Support separate langpack packages
 
+Support alternative gettext tree in /usr/share/locale-langpack; if a file is
+present in both trees, prefer the newer one.
+Ubuntu collates gettext from packages on the DVD into language packs, to
+reduce disk-space on the image.
+This is Ubuntu-Specific.
 Forwarded: not-needed
+---
+ Lib/gettext.py | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
+diff --git a/Lib/gettext.py b/Lib/gettext.py
+index 77b67ae..c869b83 100644
 --- a/Lib/gettext.py
 +++ b/Lib/gettext.py
-@@ -567,11 +567,26 @@ def find(domain, localedir=None, languag
+@@ -567,11 +567,26 @@ def find(domain, localedir=None, languages=None, all=False):
          if lang == 'C':
              break
          mofile = os.path.join(localedir, lang, 'LC_MESSAGES', '%s.mo' % domain)
