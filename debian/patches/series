@@ -38,3 +38,4 @@ reproducible-pyc.diff
 fix-ia64.diff
 gh-78214.diff
 CVE-2015-20107.patch
+venv-scheme.patch

@@ -1,0 +1,23 @@
+From: Anthony Sottile <asottile@umich.edu>
+Date: Sat, 29 Oct 2022 21:24:50 -0400
+Subject: add `venv` scheme to sysconfig
+
+- this fixes `virtualenv` / `build` for debian (where `/usr/local` is the
+  usual prefix)
+- simpler backport of https://github.com/python/cpython/pull/31034
+---
+ Lib/sysconfig.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
+index a218726..f44f97c 100644
+--- a/Lib/sysconfig.py
++++ b/Lib/sysconfig.py
+@@ -81,6 +81,7 @@ _INSTALL_SCHEMES = {
+         'data': '{base}',
+         },
+     }
++_INSTALL_SCHEMES['venv'] = _INSTALL_SCHEMES['posix_prefix']
+ 
+ 
+ # NOTE: site.py has copy of this function.
