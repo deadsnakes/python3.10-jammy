@@ -1,3 +1,9 @@
+# DEPRECATED
+
+upgrade `virtualenv`, install `python3-distutils`
+
+___
+
 python3.10-jammy
 ================
 
